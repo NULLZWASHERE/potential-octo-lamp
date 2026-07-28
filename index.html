@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>spawnism.764.ong</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background-color: #050507;
+            color: #f1f5f9;
+            font-family: 'JetBrains Mono', monospace;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Bar */
+        header {
+            background: #09090b;
+            border-bottom: 1px solid #18181b;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 100%;
+            height: 10px;
+            background: #ef4444;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ef4444;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+
+        .brand h1 {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+
+        .brand h1 span {
+            color: #ef4444;
+        }
+
+        .info-badge {
+            background: #18181b;
+            border: 1px solid #27272a;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: #a1a1aa;
+        }
+
+        .info-badge span {
+            color: #f87171;
+            font-weight: bold;
+        }
+
+        /* Main Box */
+        .workspace {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            max-width: 950px;
+            width: 100%;
+            margin: 0 auto;
+            gap: 16px;
+            overflow: hidden;
+        }
+
+        .chat-container {
+            flex: 1;
+            background: #09090b;
+            border: 1px solid #18181b;
+            border-radius: 12px;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        .message {
+            background: #121216;
+            border: 1px solid #1f1f23;
+            border-left: 3px solid #ef4444;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            word-break: break-word;
+            animation: slideUp 0.15s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .msg-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 0.8rem;
+        }
+
+        .sender {
+            color: #f87171;
+            font-weight: 700;
+        }
+
+        .timestamp {
+            color: #52525b;
+        }
+
+        .msg-body {
+            color: #e4e4e7;
+            line-height: 1.4;
+        }
+
+        .empty-state {
+            color: #52525b;
+            text-align: center;
+            margin: auto;
+            font-size: 0.9rem;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 12px;
+            background: #09090b;
+            padding: 12px;
+            border: 1px solid #18181b;
+            border-radius: 12px;
+        }
+
+        input, button {
+            background: #121216;
+            border: 1px solid #27272a;
+            color: #f1f5f9;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input:focus {
+            border-color: #ef4444;
+            background: #18181b;
+        }
+
+        #senderInput {
+            width: 140px;
+            color: #f87171;
+            font-weight: 700;
+        }
+
+        #textInput {
+            flex: 1;
+        }
+
+        button {
+            background: #ef4444;
+            border-color: #ef4444;
+            color: #ffffff;
+            cursor: pointer;
+            font-weight: 700;
+            padding: 0 24px;
+        }
+
+        button:hover {
+            background: #dc2626;
+            border-color: #dc2626;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #52525b;
+            padding: 12px;
+            border-top: 1px solid #121216;
+            background: #050507;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <div class="status-dot"></div>
+            <h1>SPAWNISM <span>//</span> 764</h1>
+        </div>
+        <div class="info-badge">
+            Topic: <span>764 &amp; Spawnism</span>
+        </div>
+    </header>
+
+    <div class="workspace">
+        <div class="chat-container" id="chatBox">
+            <div class="empty-state">Connecting to server...</div>
+        </div>
+
+        <div class="controls">
+            <input type="text" id="senderInput" placeholder="Name" value="Anon" />
+            <input type="text" id="textInput" placeholder="Type a message..." autofocus />
+            <button onclick="sendMessage()">SEND</button>
+        </div>
+    </div>
+
+    <footer>
+        All messages disappear when they get sent to the server.
+    </footer>
+
+    <script>
+        const API_URL = '/api/chat';
+
+        async function fetchMessages() {
+            try {
+                const res = await fetch(API_URL);
+                const data = await res.json();
+                const chatBox = document.getElementById('chatBox');
+                
+                if (!data.messages || data.messages.length === 0) {
+                    chatBox.innerHTML = '<div class="empty-state">No messages here yet. Say something.</div>';
+                    return;
+                }
+
+                chatBox.innerHTML = data.messages.map(msg => `
+                    <div class="message">
+                        <div class="msg-header">
+                            <span class="sender">${escapeHtml(msg.sender)}</span>
+                            <span class="timestamp">${msg.timestamp}</span>
+                        </div>
+                        <div class="msg-body">${escapeHtml(msg.text)}</div>
+                    </div>
+                `).join('');
+                
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } catch (err) {
+                console.error('Error', err);
+            }
+        }
+
+        async function sendMessage() {
+            const sender = document.getElementById('senderInput').value.trim() || 'Anon';
+            const textInput = document.getElementById('textInput');
+            const text = textInput.value.trim();
+
+            if (!text) return;
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sender, text })
+                });
+
+                if (res.ok) {
+                    textInput.value = '';
+                    fetchMessages();
+                }
+            } catch (err) {
+                console.error('Error', err);
+            }
+        }
+
+        document.getElementById('textInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function escapeHtml(str) {
+            return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        setInterval(fetchMessages, 2000);
+        fetchMessages();
+    </script>
+</body>
+</html>
