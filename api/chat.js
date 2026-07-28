@@ -1,5 +1,3 @@
-let messages = [];
-
 export default function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -11,21 +9,21 @@ export default function handler(req, res) {
     return;
   }
 
+  // Handle GET: Always return an empty list so nothing is ever saved
   if (req.method === 'GET') {
-    return res.status(200).json({ messages });
+    return res.status(200).json({ messages: [] });
   }
 
+  // Handle POST: Accept the message but don't store it anywhere
   if (req.method === 'POST') {
     const { sender, text } = req.body;
 
-    // No validation or filtering—accepts everything raw
     const newMessage = {
-      sender: sender || 'Anonymous',
+      sender: sender || 'Anon',
       text: text || '',
       timestamp: new Date().toLocaleTimeString()
     };
 
-    messages.push(newMessage);
     return res.status(201).json({ success: true, message: newMessage });
   }
 
