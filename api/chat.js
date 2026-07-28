@@ -1,3 +1,5 @@
+let messages = [];
+
 export default function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -9,12 +11,12 @@ export default function handler(req, res) {
     return;
   }
 
-  // Handle GET: Always return an empty list so nothing is ever saved
+  // Handle GET: Send the current temporary list of messages
   if (req.method === 'GET') {
-    return res.status(200).json({ messages: [] });
+    return res.status(200).json({ messages });
   }
 
-  // Handle POST: Accept the message but don't store it anywhere
+  // Handle POST: Add a new message to the temporary list
   if (req.method === 'POST') {
     const { sender, text } = req.body;
 
@@ -24,6 +26,7 @@ export default function handler(req, res) {
       timestamp: new Date().toLocaleTimeString()
     };
 
+    messages.push(newMessage);
     return res.status(201).json({ success: true, message: newMessage });
   }
 
