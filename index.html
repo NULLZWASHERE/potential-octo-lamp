@@ -1,469 +1,370 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" translate="no" class="notranslate theme-light" style="
+  --color-primary: rgb(51 144 236);
+  --color-primary-opacity: rgb(51 144 236 / 0.11765);
+  --color-background: rgb(255 255 255);
+  --color-background-secondary: rgb(243 243 245);
+  --color-background-own: rgb(238 255 222);
+  --color-text: rgb(0 0 0);
+  --color-text-secondary: rgb(112 117 121);
+  --color-borders: rgb(218 220 224);
+  --color-links: rgb(51 144 236);
+">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>spawnism // 764</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700;800&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NO FLITER telegram mod</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; }
 
-        :root {
-            --bg: #030304;
-            --surface: #0a0a0d;
-            --surface-hover: #121218;
-            --border: #1a1a24;
-            --border-bright: #2a2a38;
-            --primary: #ff2a2a;
-            --primary-dim: #cc1f1f;
-            --primary-glow: rgba(255, 42, 42, 0.25);
-            --text-main: #f1f5f9;
-            --text-muted: #475569;
-            --text-dim: #334155;
-        }
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background: var(--color-background);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: var(--color-text);
+}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: 'JetBrains Mono', monospace;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            position: relative;
-        }
+header {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background: var(--color-background);
+  border-bottom: 1px solid var(--color-borders);
+  font-weight: 500;
+  font-size: 16px;
+  gap: 12px;
+  z-index: 10;
+}
 
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: 
-                linear-gradient(var(--border) 1px, transparent 1px),
-                linear-gradient(90deg, var(--border) 1px, transparent 1px);
-            background-size: 48px 48px;
-            background-position: center center;
-            mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
-            -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
-            pointer-events: none;
-            z-index: 0;
-        }
+.header-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #3390ec;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  color: #fff;
+  font-size: 15px;
+  overflow: hidden;
+}
 
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent 0px,
-                transparent 2px,
-                rgba(255, 255, 255, 0.012) 2px,
-                rgba(255, 255, 255, 0.012) 3px
-            );
-            pointer-events: none;
-            z-index: 1;
-        }
+.header-avatar span {
+  font-weight: 700;
+  font-size: 14px;
+}
 
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border-bright); }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+.header-info {
+  display: flex;
+  flex-direction: column;
+}
 
-        header {
-            background: rgba(10, 10, 13, 0.92);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
-            padding: 14px 32px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 10;
-            position: relative;
-        }
+.header-title {
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--color-text);
+}
 
-        header::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 120px;
-            height: 1px;
-            background: var(--primary);
-            box-shadow: 0 0 8px var(--primary);
-        }
+.header-status {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
+#chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  /* Using your local background image file name directly */
+  background-image: url("back.png");
+  background-color: #99BA92;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--primary);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--primary);
-            animation: pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  max-width: 75%;
+}
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.2; }
-        }
+.row.outgoing {
+  margin-left: auto;
+  flex-direction: row-reverse;
+}
 
-        .brand h1 {
-            font-size: 0.95rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            position: relative;
-        }
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #3390ec;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  color: #fff;
+  font-size: 13px;
+  flex-shrink: 0;
+  margin-bottom: 2px;
+}
 
-        .brand h1 span {
-            color: var(--primary);
-            opacity: 0.6;
-            font-weight: 400;
-        }
+.msg {
+  background: var(--color-background);
+  padding: 8px 12px;
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  word-break: break-word;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--color-text);
+}
 
-        .info-badge {
-            background: transparent;
-            border: 1px solid var(--border);
-            padding: 5px 12px;
-            border-radius: 2px;
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-muted);
-        }
+.row.outgoing .msg {
+  background: var(--color-background-own);
+  border-bottom-right-radius: 4px;
+}
 
-        .info-badge span {
-            color: var(--text-main);
-            font-weight: 700;
-        }
+.row:not(.outgoing) .msg {
+  border-bottom-left-radius: 4px;
+}
 
-        .workspace {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 28px 32px;
-            max-width: 920px;
-            width: 100%;
-            margin: 0 auto;
-            gap: 20px;
-            overflow: hidden;
-            position: relative;
-            z-index: 2;
-        }
+.name {
+  font-size: 13px;
+  color: #2481cc;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
 
-        .chat-container {
-            flex: 1;
-            background: rgba(8, 8, 11, 0.5);
-            backdrop-filter: blur(6px);
-            border: 1px solid var(--border);
-            border-radius: 2px;
-            padding: 28px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            position: relative;
-        }
+.row.outgoing .name {
+  display: none;
+}
 
-        .chat-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--primary), transparent);
-            opacity: 0.4;
-        }
+.message-content {
+  padding-right: 45px;
+}
 
-        .message {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            opacity: 0;
-            transform: translateY(8px);
-        }
+.meta-info {
+  position: absolute;
+  right: 8px;
+  bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
 
-        @keyframes slideUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
+.time {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+}
 
-        .msg-header {
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            font-size: 0.7rem;
-            padding-left: 2px;
-        }
+.row.outgoing .time {
+  color: #4a8e3a;
+}
 
-        .sender {
-            color: var(--primary);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+.checks {
+  font-size: 11px;
+  color: #4a8e3a;
+  font-weight: bold;
+}
 
-        .timestamp {
-            color: var(--text-dim);
-            font-size: 0.65rem;
-        }
+.controls {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--color-background);
+  align-items: center;
+  border-top: 1px solid var(--color-borders);
+}
 
-        .msg-body {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-left: 2px solid var(--primary);
-            padding: 12px 16px;
-            border-radius: 0 2px 2px 0;
-            font-size: 0.88rem;
-            line-height: 1.65;
-            color: var(--text-main);
-            word-break: break-word;
-            width: fit-content;
-            max-width: 85%;
-        }
+input {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--color-text);
+  font-size: 14px;
+  font-family: 'Roboto', sans-serif;
+}
 
-        .empty-state {
-            color: var(--text-dim);
-            text-align: center;
-            margin: auto;
-            font-size: 0.8rem;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+#sender {
+  width: 100px;
+  background: var(--color-background-secondary);
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--color-borders);
+}
 
-        .empty-state::after {
-            content: '_';
-            color: var(--primary);
-            animation: blink 1s step-end infinite;
-        }
+.input-wrapper {
+  flex: 1;
+  background: var(--color-background-secondary);
+  border-radius: 20px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-borders);
+}
 
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-        }
+#text {
+  flex: 1;
+  padding: 10px 0;
+}
 
-        .controls {
-            display: flex;
-            gap: 12px;
-            background: rgba(8, 8, 11, 0.6);
-            backdrop-filter: blur(6px);
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 2px;
-            position: relative;
-        }
+button {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: #3390ec;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
 
-        .controls::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border-bright), transparent);
-        }
+button:hover {
+  background: #1b73b5;
+}
 
-        input, button {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            font-family: 'JetBrains Mono', monospace;
-            padding: 12px 16px;
-            font-size: 0.85rem;
-            border-radius: 2px;
-            outline: none;
-            transition: border-color 0.15s ease, box-shadow 0.15s ease;
-        }
+button svg {
+  width: 18px;
+  height: 18px;
+  fill: white;
+  transform: translateX(1px);
+}
 
-        input:focus {
-            border-color: var(--primary-dim);
-            box-shadow: 0 0 0 1px rgba(255, 42, 42, 0.08);
-        }
-
-        #senderInput {
-            width: 140px;
-            color: var(--primary);
-            font-weight: 700;
-            font-size: 0.8rem;
-            letter-spacing: 0.5px;
-        }
-
-        #textInput {
-            flex: 1;
-        }
-
-        button {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: #000;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            cursor: pointer;
-            padding: 0 28px;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            transition: all 0.15s ease;
-        }
-
-        button:hover {
-            background: #ff3d3d;
-            border-color: #ff3d3d;
-            box-shadow: 0 0 16px var(--primary-glow);
-        }
-        
-        button:active {
-            background: var(--primary-dim);
-            border-color: var(--primary-dim);
-        }
-
-        footer {
-            text-align: center;
-            font-size: 0.65rem;
-            color: var(--text-dim);
-            padding: 12px;
-            background: var(--bg);
-            border-top: 1px solid var(--border);
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            position: relative;
-            z-index: 2;
-        }
-
-        .footer-disclaimer {
-            color: var(--primary);
-            font-weight: 700;
-            letter-spacing: 2px;
-            opacity: 0.8;
-        }
-
-        @media (max-width: 640px) {
-            .workspace { padding: 16px; }
-            .chat-container { padding: 16px; }
-            #senderInput { width: 100px; }
-            button { padding: 0 20px; }
-        }
-    </style>
+.empty {
+  margin: auto;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 6px 14px;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+</style>
 </head>
 <body>
 
-    <header>
-        <div class="brand">
-            <div class="status-dot"></div>
-            <h1>SPAWNISM <span>//</span> 764</h1>
+<header>
+  <div class="header-avatar"><span>NF</span></div>
+  <div class="header-info">
+    <div class="header-title">NO FLITER</div>
+    <div class="header-status">online</div>
+  </div>
+</header>
+
+<div id="chat">
+  <div class="empty">No messages</div>
+</div>
+
+<div class="controls">
+  <input id="sender" value="Guest" placeholder="Name">
+  <div class="input-wrapper">
+    <input id="text" placeholder="Write a message...">
+  </div>
+  <button onclick="sendMessage()" title="Send">
+    <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></svg>
+  </button>
+</div>
+
+<script>
+const API_URL = '/api/chat';
+let localMessages = [];
+
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, m => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"
+  }[m]));
+}
+
+function render(msgs) {
+  const c = document.getElementById("chat");
+  const currentSender = document.getElementById("sender").value.trim() || "Guest";
+  
+  if (!msgs.length) {
+    c.innerHTML = '<div class="empty">No messages</div>';
+    return;
+  }
+  
+  c.innerHTML = msgs.map(m => {
+    const isOutgoing = m.sender.toLowerCase() === currentSender.toLowerCase();
+    const avatarLetter = esc(m.sender).charAt(0).toUpperCase();
+    
+    return `
+      <div class="row ${isOutgoing ? 'outgoing' : ''}">
+        <div class="avatar">${avatarLetter}</div>
+        <div class="msg">
+          <div class="name">${esc(m.sender)}</div>
+          <div class="message-content">${esc(m.text)}</div>
+          <div class="meta-info">
+            <span class="time">${m.timestamp || new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+            ${isOutgoing ? '<span class="checks">✓✓</span>' : ''}
+          </div>
         </div>
-        <div class="info-badge">
-            Topic: <span>764 &amp; Spawnism</span>
-        </div>
-    </header>
+      </div>`;
+  }).join("");
+  
+  c.scrollTop = c.scrollHeight;
+}
 
-    <div class="workspace">
-        <div class="chat-container" id="chatBox">
-            <div class="empty-state">no messages</div>
-        </div>
+async function fetchMessages() {
+  try {
+    const r = await fetch(API_URL);
+    if (!r.ok) throw 0;
+    const d = await r.json();
+    render(d.messages || []);
+  } catch {
+    render(localMessages);
+  }
+}
 
-        <div class="controls">
-            <input type="text" id="senderInput" placeholder="ID" value="anon_user" />
-            <input type="text" id="textInput" placeholder="type here..." autofocus autocomplete="off" />
-            <button onclick="sendMessage()">SEND</button>
-        </div>
-    </div>
+async function sendMessage() {
+  const sender = document.getElementById("sender").value.trim() || "Guest";
+  const text = document.getElementById("text").value.trim();
+  if (!text) return;
+  
+  const msg = { 
+    sender, 
+    text, 
+    timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
+  };
+  
+  try {
+    const r = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(msg)
+    });
+    if (!r.ok) throw 0;
+    document.getElementById("text").value = "";
+    fetchMessages();
+  } catch {
+    localMessages.push(msg);
+    document.getElementById("text").value = "";
+    render(localMessages);
+  }
+}
 
-    <footer>
-        <span class="footer-disclaimer">unfiltered // no mods // no logs</span>
-    </footer>
+document.getElementById("text").addEventListener("keydown", e => {
+  if (e.key === "Enter") sendMessage();
+});
 
-    <script>
-        const API_URL = '/api/chat';
-        let localMessages = [];
+fetchMessages();
+setInterval(fetchMessages, 2000);
+</script>
 
-        async function fetchMessages() {
-            try {
-                const res = await fetch(API_URL);
-                if (!res.ok) throw new Error('backend unreachable');
-                const data = await res.json();
-                renderMessages(data.messages);
-            } catch (err) {
-                renderMessages(localMessages);
-            }
-        }
-
-        function renderMessages(messages) {
-            const chatBox = document.getElementById('chatBox');
-            
-            if (!messages || messages.length === 0) {
-                chatBox.innerHTML = '<div class="empty-state">no messages</div>';
-                return;
-            }
-
-            if (chatBox.children.length === messages.length && !chatBox.querySelector('.empty-state')) return;
-
-            chatBox.innerHTML = messages.map(msg => `
-                <div class="message">
-                    <div class="msg-header">
-                        <span class="sender">${escapeHtml(msg.sender)}</span>
-                        <span class="timestamp">${msg.timestamp || new Date().toLocaleTimeString()}</span>
-                    </div>
-                    <div class="msg-body">${escapeHtml(msg.text)}</div>
-                </div>
-            `).join('');
-            
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-
-        async function sendMessage() {
-            const sender = document.getElementById('senderInput').value.trim() || 'anon';
-            const textInput = document.getElementById('textInput');
-            const text = textInput.value.trim();
-
-            if (!text) return;
-
-            const newMsg = { sender, text, timestamp: new Date().toLocaleTimeString() };
-
-            try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newMsg)
-                });
-
-                if (res.ok) {
-                    textInput.value = '';
-                    fetchMessages();
-                } else {
-                    throw new Error('post failed');
-                }
-            } catch (err) {
-                localMessages.push(newMsg);
-                textInput.value = '';
-                renderMessages(localMessages);
-            }
-        }
-
-        document.getElementById('textInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') sendMessage();
-        });
-
-        function escapeHtml(str) {
-            return String(str)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
-
-        setInterval(fetchMessages, 2000);
-        fetchMessages();
-    </script>
 </body>
 </html>
