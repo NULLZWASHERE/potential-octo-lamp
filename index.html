@@ -285,6 +285,13 @@ button svg {
 const API_URL = '/api/chat';
 let localMessages = [];
 
+// Unique browser session identifier
+let myClientId = localStorage.getItem('chat_client_id');
+if (!myClientId) {
+  myClientId = 'user_' + Math.random().toString(36).substring(2, 9);
+  localStorage.setItem('chat_client_id', myClientId);
+}
+
 function esc(s) {
   return String(s).replace(/[&<>"]/g, m => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"
@@ -293,17 +300,14 @@ function esc(s) {
 
 function render(msgs) {
   const c = document.getElementById("chat");
-  const currentSender = document.getElementById("sender").value.trim().toLowerCase();
   
   if (!msgs.length) {
     c.innerHTML = '<div class="empty">No messages</div>';
     return;
   }
   
-  c.innerHTML = msgs.map((m, index) => {
-    // Tie outgoing status strictly to the message sender's unique array index or object identity 
-    // instead of matching the current input name, so different people don't hijack each other's sides.
-    const isOutgoing = m.isUser || m.sender.toLowerCase() === currentSender && index === msgs.length - 1;
+  c.innerHTML = msgs.map(m => {
+    const isOutgoing = m.clientId === myClientId;
     const avatarLetter = esc(m.sender).charAt(0).toUpperCase();
     
     return `
@@ -342,7 +346,7 @@ async function sendMessage() {
   const msg = { 
     sender, 
     text, 
-    isUser: true,
+    clientId: myClientId,
     timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
   };
   
