@@ -11,19 +11,20 @@ export default function handler(req, res) {
     return;
   }
 
-  // Handle GET: Send the current temporary list of messages
+  // Handle GET: Send the current list of messages
   if (req.method === 'GET') {
     return res.status(200).json({ messages });
   }
 
-  // Handle POST: Add a new message to the temporary list
+  // Handle POST: Add a new message with a unique client ID tag
   if (req.method === 'POST') {
-    const { sender, text } = req.body;
+    const { sender, text, clientId } = req.body;
 
     const newMessage = {
       sender: sender || 'Anon',
       text: text || '',
-      timestamp: new Date().toLocaleTimeString()
+      clientId: clientId || 'unknown',
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
     messages.push(newMessage);
