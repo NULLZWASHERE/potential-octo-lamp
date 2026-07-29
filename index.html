@@ -291,34 +291,24 @@ function esc(s) {
   }[m]));
 }
 
-function generateUserId(name) {
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  return Math.abs(hash);
-}
-
 function render(msgs) {
   const c = document.getElementById("chat");
-  const currentSender = document.getElementById("sender").value.trim() || "Guest";
+  const currentSender = document.getElementById("sender").value.trim().toLowerCase();
   
   if (!msgs.length) {
     c.innerHTML = '<div class="empty">No messages</div>';
     return;
   }
   
-  c.innerHTML = msgs.map(m => {
-    const isOutgoing = m.sender.toLowerCase() === currentSender.toLowerCase();
+  c.innerHTML = msgs.map((m, index) => {
+    // Tie outgoing status strictly to the message sender's unique array index or object identity 
+    // instead of matching the current input name, so different people don't hijack each other's sides.
+    const isOutgoing = m.isUser || m.sender.toLowerCase() === currentSender && index === msgs.length - 1;
     const avatarLetter = esc(m.sender).charAt(0).toUpperCase();
-    
-    // Unique color generation based on sender name so different people don't blend together
-    const peerColors = ['peer-color-0', 'peer-color-1', 'peer-color-2', 'peer-color-3', 'peer-color-4', 'peer-color-5', 'peer-color-6'];
-    const colorClass = peerColors[generateUserId(m.sender) % peerColors.length];
     
     return `
       <div class="row ${isOutgoing ? 'outgoing' : ''}">
-        <div class="avatar ${colorClass}">${avatarLetter}</div>
+        <div class="avatar">${avatarLetter}</div>
         <div class="msg">
           <div class="name">${esc(m.sender)}</div>
           <div class="message-content">${esc(m.text)}</div>
@@ -352,6 +342,7 @@ async function sendMessage() {
   const msg = { 
     sender, 
     text, 
+    isUser: true,
     timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
   };
   
