@@ -285,13 +285,6 @@ button svg {
 const API_URL = '/api/chat';
 let localMessages = [];
 
-// Unique browser session identifier
-let myClientId = localStorage.getItem('chat_client_id');
-if (!myClientId) {
-  myClientId = 'user_' + Math.random().toString(36).substring(2, 9);
-  localStorage.setItem('chat_client_id', myClientId);
-}
-
 function esc(s) {
   return String(s).replace(/[&<>"]/g, m => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"
@@ -300,6 +293,7 @@ function esc(s) {
 
 function render(msgs) {
   const c = document.getElementById("chat");
+  const currentSender = document.getElementById("sender").value.trim() || "Guest";
   
   if (!msgs.length) {
     c.innerHTML = '<div class="empty">No messages</div>';
@@ -307,7 +301,7 @@ function render(msgs) {
   }
   
   c.innerHTML = msgs.map(m => {
-    const isOutgoing = m.clientId === myClientId;
+    const isOutgoing = m.sender.toLowerCase() === currentSender.toLowerCase();
     const avatarLetter = esc(m.sender).charAt(0).toUpperCase();
     
     return `
@@ -346,7 +340,6 @@ async function sendMessage() {
   const msg = { 
     sender, 
     text, 
-    clientId: myClientId,
     timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
   };
   
