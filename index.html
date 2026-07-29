@@ -13,7 +13,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>TELEGRAM</title>
+<title>NO FLITER</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; }
@@ -291,6 +291,14 @@ function esc(s) {
   }[m]));
 }
 
+function generateUserId(name) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return Math.abs(hash);
+}
+
 function render(msgs) {
   const c = document.getElementById("chat");
   const currentSender = document.getElementById("sender").value.trim() || "Guest";
@@ -304,9 +312,13 @@ function render(msgs) {
     const isOutgoing = m.sender.toLowerCase() === currentSender.toLowerCase();
     const avatarLetter = esc(m.sender).charAt(0).toUpperCase();
     
+    // Unique color generation based on sender name so different people don't blend together
+    const peerColors = ['peer-color-0', 'peer-color-1', 'peer-color-2', 'peer-color-3', 'peer-color-4', 'peer-color-5', 'peer-color-6'];
+    const colorClass = peerColors[generateUserId(m.sender) % peerColors.length];
+    
     return `
       <div class="row ${isOutgoing ? 'outgoing' : ''}">
-        <div class="avatar">${avatarLetter}</div>
+        <div class="avatar ${colorClass}">${avatarLetter}</div>
         <div class="msg">
           <div class="name">${esc(m.sender)}</div>
           <div class="message-content">${esc(m.text)}</div>
